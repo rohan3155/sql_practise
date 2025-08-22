@@ -189,3 +189,142 @@ create table transactions (
         transaction_date date,
         amount decimal(5, 2)
 );
+
+create table customers (
+customer_id int PRIMARY KEY auto_increment,
+first_name varchar(50),
+last_name varchar(50)
+
+);
+
+create table transactions (
+        transaction_id int primary key auto_increment,
+        transaction_date date,
+        amount decimal(5, 2),
+        customer_id INT,
+        
+        foreign (customer_id) references customers(customer_id)
+);
+
+alter table transactions
+drop foreign key transactions_ibfk_1
+
+alter table transactions
+add constraint fk_customer_id   
+foreign key (customer_id)
+references customers(customer_id);
+
+alter table transactions 
+auto_increment = 1000;
+
+
+INSERT INTO customers (first_name, last_name) VALUES
+('Rohan', 'Bhatia'),
+('Amit', 'Sharma'),
+('Priya', 'Verma'),
+('Karan', 'Malhotra'),
+('Sneha', 'Kapoor'),
+('Vikram', 'Singh'),
+('Neha', 'Rastogi'),
+('Arjun', 'Mehta'),
+('Simran', 'Chopra'),
+('Rahul', 'Gupta');
+
+select * 
+from transactions inner join customers
+on transactions.customer_id  = customers.customer_id
+
+select * 
+from transactions left join customers
+on transactions.customer_id  = customers.customer_id
+
+select * 
+from transactions right join customers
+on transactions.customer_id  = customers.customer_id
+
+
+select count(amount) 
+from transactions;
+
+select count(amount) as count
+from transactions;
+
+select count(amount) as "Todays transactions"
+from transactions;
+
+select max(amount) as maximum
+from transactions;
+
+select min(amount) as minimum
+from transactions;
+
+select avg(amount) as average
+from transactions;
+
+select sum(amount) as sum
+from transactions;
+
+select concat(first_name, " " ,last_name) as full_name
+from customers;
+
+
+-- Logical Operators Examples
+
+-- AND operator: both conditions must be true
+select * from employees 
+where hourly_pay > 100.00 AND hire_date > '2024-01-01';
+
+-- OR operator: at least one condition must be true
+select * from employees 
+where first_name = 'John' OR last_name = 'Bhatia';
+
+-- NOT operator: negates a condition
+select * from employees 
+where NOT hourly_pay > 150.00;
+
+-- BETWEEN operator: value within a range (inclusive)
+select * from employees 
+where hourly_pay between 100.00 and 200.00;
+
+-- IN operator: value matches any in a list
+select * from employees 
+where first_name in ('John', 'Rohan', 'Priya');
+
+-- LIKE operator with wildcards
+select * from employees 
+where first_name like 'R%';  -- Names starting with 'R'
+
+select * from employees 
+where last_name like '%a';   -- Names ending with 'a'
+
+select * from employees 
+where first_name like '_o%'; -- Second letter is 'o'
+
+-- Combining multiple logical operators
+select * from employees 
+where (hourly_pay > 100.00 OR first_name = 'John') 
+AND hire_date is not null;
+
+select * from employees 
+order by first_name asc;
+
+select * from employees 
+order by first_name desc;
+
+select * from customers
+limit 2;
+
+select * 
+from customers
+limit 2, 1; -- 2 → OFFSET, 1 → LIMIT
+
+
+-- self join 
+SELECT 
+    a.customer_id, 
+    a.first_name, 
+    a.last_name,
+    CONCAT(b.first_name, ' ', b.last_name) AS referred_by
+FROM customers AS a
+LEFT JOIN customers AS b
+    ON a.referral_id = b.customer_id;
